@@ -33,6 +33,9 @@ const ToDoList = () => {
 		<div>
 			<h1>ToDo List</h1>
 			<ToDoInput onAdd={handleAdd} />
+			{items.length <= 0 && (
+				<p>No items to show. You can add items to list here.</p>
+			)}
 			<ToDoItem
 				items={items}
 				onDelete={handleDelete}
