@@ -1,64 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, Outlet } from "react-router-dom";
 
 function BlogPosts() {
-	const [formData, setFormData] = useState({
-		name: "",
-		email: "",
-		message: "",
-	});
+	const [posts, setPosts] = useState([]);
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
-		console.log("hey", name, value);
-		setFormData({ ...formData, [name]: value });
-	};
+	useEffect(() => {
+		fetchPosts();
+	}, []);
 
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		console.log("hey", formData);
+	const fetchPosts = async () => {
+		const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+		const data = await res.json();
+		setPosts(data);
 	};
 
 	return (
-		<>
+		<div>
 			<h1>BlogPosts</h1>
-			<form onSubmit={handleSubmit}>
-
-				<div>
-					<label>
-						Name:
-						<input
-							type="text"
-							name="name"
-							value={formData.name}
-							onChange={handleChange}
-						/>
-					</label>
-				</div>
-				<div>
-					<label>
-						Email:
-						<input
-							type="text"
-							name="email"
-							value={formData.email}
-							onChange={handleChange}
-						/>
-					</label>
-				</div>
-				<div>
-					<label>
-						Message:
-						<input
-							type="text"
-							name="message"
-							value={formData.message}
-							onChange={handleChange}
-						/>
-					</label>
-				</div>
-				<button type="submit">Submit</button>
-			</form>
-		</>
+			<ul>
+				{posts.map((post) => (
+					<li key={post.id}>
+						<Link to={`/blogs/${post.id}`} state={{ post }}>
+							{post.title}
+						</Link>
+					</li>
+				))}
+			</ul>
+		</div>
 	);
 }
 
